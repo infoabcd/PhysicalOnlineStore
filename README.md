@@ -1,4 +1,4 @@
-# Physical Online Store v1.1
+# Physical Online Store v1.0
 
 一个包含 **Express + Sequelize + MySQL** 后端与 **React + Vite + Ant Design + TailwindcCSS** 前端的购物平台，支持 PayPal 支付重定向、订单管理、商品分类与后台运营功能。
 
@@ -89,23 +89,23 @@ Physical trading platform/
 
 | Method | 路径 | 描述 |
 | --- | --- | --- |
-| `GET /` | 获取商品分页列表（含邮费） |
-| `GET /products/:id` | 获取单个商品详情 |
-| `GET /search/title/t` | 根据标题搜索商品 |
-| `GET /search/assort/:categoryId` | 分类分页列表 |
-| `POST /admin/login` | 管理员登录 |
-| `POST /admin/create` | 新增商品（含邮费） |
-| `PUT /admin/update/:id` | 更新商品 |
-| `DELETE /admin/delete/:id` | 删除商品 |
-| `GET /catalog/categories` | 获取分类列表 |
-| `POST /media/upload` | 上传商品图片 |
-| `POST /orders/create-redirect` | 创建 PayPal 重定向订单（前端使用） |
-| `GET /orders/return` | PayPal 支付完成回跳（后端 302 到前端订单详情） |
-| `GET /orders/cancel` | PayPal 取消回跳 |
-| `GET /orders/public` | 用户通过 `orderNo + email` 查询订单 |
-| `GET /orders/admin` | 管理端查看订单列表 |
-| `PATCH /orders/admin/:orderNo/status` | 管理端更新订单状态 |
-| `GET /orders/admin/stats` | 管理端查询订单统计 |
+| `GET | /` | 获取商品分页列表（含邮费） |
+| `GET | /products/:id` | 获取单个商品详情 |
+| `GET | /search/title/t` | 根据标题搜索商品 |
+| `GET | /search/assort/:categoryId` | 分类分页列表 |
+| `POST | /admin/login` | 管理员登录 |
+| `POST | /admin/create` | 新增商品（含邮费） |
+| `PUT | /admin/update/:id` | 更新商品 |
+| `DELETE | /admin/delete/:id` | 删除商品 |
+| `GET | /catalog/categories` | 获取分类列表 |
+| `POST | /media/upload` | 上传商品图片 |
+| `POST | /orders/create-redirect` | 创建 PayPal 重定向订单（前端使用） |
+| `GET | /orders/return` | PayPal 支付完成回跳（后端 302 到前端订单详情） |
+| `GET | /orders/cancel` | PayPal 取消回跳 |
+| `GET | /orders/public` | 用户通过 `orderNo + email` 查询订单 |
+| `GET | /orders/admin` | 管理端查看订单列表 |
+| `PATCH | /orders/admin/:orderNo/status` | 管理端更新订单状态 |
+| `GET | /orders/admin/stats` | 管理端查询订单统计 |
 
 ## 部署指南
 
