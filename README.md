@@ -1,4 +1,4 @@
-# Physical Online Store v1.0
+# Physical Online Store v1.1
 
 一个包含 **Express + Sequelize + MySQL** 后端与 **React + Vite + Ant Design + TailwindcCSS** 前端的购物平台，支持 PayPal 支付重定向、订单管理、商品分类与后台运营功能。
 
