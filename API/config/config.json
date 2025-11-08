@@ -1,0 +1,19 @@
+{
+  "site": {
+    "_comment": "站点文案配置",
+    "title": "标题",
+    "subtitle": "副标题"
+  },
+  "paypal": {
+    "clientId": "从PayPal开发者平台获得",
+    "clientSecret": "从PayPal开发者平台获得",
+    "currency": "USD",
+    "env": "sandbox",
+    "returnUrl": "http://localhost:3000/orders/return",
+    "cancelUrl": "http://localhost:3000/orders/cancel",
+    "brandName": "从PayPal开发者平台获得"
+  },
+  "frontend": {
+    "baseUrl": "http://localhost:5173"
+  }
+}
