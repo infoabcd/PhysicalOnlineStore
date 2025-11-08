@@ -1,10 +1,8 @@
-# Physical Online Store v1.0
+# Physical Online Store v1.1
 
 一个包含 **Express + Sequelize + MySQL** 后端与 **React + Vite + Ant Design + TailwindcCSS** 前端的购物平台，支持 PayPal 支付重定向、订单管理、商品分类与后台运营功能。
 
 **⚠️ 这是一条支线测试版本，如果有问题，请发 issue ⚠️**
-
-`API/env` 文件要改名为 `API/.env`
 
 ## 目录
 
@@ -129,6 +127,8 @@ Physical trading platform/
    npm install
    ```
 2. 根据环境准备配置：
+   **`API/env` 文件要改名为 `API/.env`**
+   
    - `.env`：参考以下变量：
      ```
      ...
