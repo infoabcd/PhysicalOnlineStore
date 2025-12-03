@@ -224,10 +224,10 @@ function Dashboard() {
         throw new Error(`删除失败: ${response.status} ${response.statusText}. 详情: ${errorText}`);
       }
 
-      messageApi.success('删除成功！');
+      showToast('success', '删除成功！');
       await fetchData(currentPage, pageSize);
     } catch (error) {
-        messageApi.error('删除失败，请检查控制台以获取更多信息。');
+        showToast('error', '删除失败，请检查控制台以获取更多信息。');
         console.error('删除商品失败:', error);
     } finally {
         setLoading(false);

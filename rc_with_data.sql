@@ -1,6 +1,9 @@
--- hxbox_with_data.sql
--- Schema + sample data migrated from hxbox.sql, adapted to current models
--- Includes new field: commodities.shipping_fee (set to NULL for existing samples)
+/*M!999999\- enable the sandbox mode */ 
+-- MariaDB dump 10.19-11.7.2-MariaDB, for osx10.20 (arm64)
+--
+-- Host: localhost    Database: physical_trading
+-- ------------------------------------------------------
+-- Server version	11.7.2-MariaDB
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
@@ -11,135 +14,81 @@
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
-/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+/*M!100616 SET @OLD_NOTE_VERBOSITY=@@NOTE_VERBOSITY, NOTE_VERBOSITY=0 */;
 
--- ------------------------------------------------------
--- Drop existing tables (be careful)
--- ------------------------------------------------------
-DROP TABLE IF EXISTS `order_items`;
-DROP TABLE IF EXISTS `orders`;
-DROP TABLE IF EXISTS `commodity_categories`;
+--
+-- Current Database: `physical_trading`
+--
+
+CREATE DATABASE /*!32312 IF NOT EXISTS*/ `physical_trading` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci */;
+
+USE `physical_trading`;
+
+--
+-- Table structure for table `categories`
+--
+
 DROP TABLE IF EXISTS `categories`;
-DROP TABLE IF EXISTS `commodities`;
-DROP TABLE IF EXISTS `users`;
-
--- ------------------------------------------------------
--- Table: users
--- ------------------------------------------------------
-CREATE TABLE `users` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `username` VARCHAR(255) NOT NULL,
-  `password` VARCHAR(255) NOT NULL,
-  `role` TINYINT(1) DEFAULT 0,
-  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ------------------------------------------------------
--- Table: commodities (added shipping_fee)
--- ------------------------------------------------------
-CREATE TABLE `commodities` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `title` VARCHAR(255) NOT NULL,
-  `description` TEXT DEFAULT NULL,
-  `price` DECIMAL(10,2) NOT NULL,
-  `shipping_fee` DECIMAL(10,2) NULL,
-  `original_price` DECIMAL(10,2) DEFAULT NULL,
-  `promotion_price` DECIMAL(10,2) DEFAULT NULL,
-  `is_on_promotion` TINYINT(1) DEFAULT 0,
-  `discount_amount` DECIMAL(10,2) DEFAULT NULL,
-  `stock` INT NOT NULL DEFAULT 0,
-  `image_urls` VARCHAR(255) DEFAULT NULL,
-  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ------------------------------------------------------
--- Table: categories
--- ------------------------------------------------------
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
 CREATE TABLE `categories` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `name` VARCHAR(255) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+  UNIQUE KEY `name` (`name`),
+  UNIQUE KEY `name_2` (`name`)
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- ------------------------------------------------------
--- Join Table: commodity_categories (many-to-many)
--- ------------------------------------------------------
-CREATE TABLE `commodity_categories` (
-  `commodity_id` INT NOT NULL,
-  `category_id` INT NOT NULL,
-  PRIMARY KEY (`commodity_id`, `category_id`),
-  KEY `category_id` (`category_id`),
-  CONSTRAINT `commodity_categories_ibfk_1` FOREIGN KEY (`commodity_id`) REFERENCES `commodities` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `commodity_categories_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+--
+-- Dumping data for table `categories`
+--
 
--- ------------------------------------------------------
--- Table: orders
--- ------------------------------------------------------
-CREATE TABLE `orders` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `order_no` VARCHAR(32) NOT NULL,
-  `email` VARCHAR(255) NOT NULL,
-  `country` VARCHAR(64) NOT NULL,
-  `region` VARCHAR(128) NOT NULL,
-  `address1` VARCHAR(255) NOT NULL,
-  `address2` VARCHAR(255) DEFAULT NULL,
-  `postal_code` VARCHAR(32) DEFAULT NULL,
-  `phone` VARCHAR(64) DEFAULT NULL,
-  `currency` VARCHAR(8) NOT NULL DEFAULT 'USD',
-  `total_amount` DECIMAL(10,2) NOT NULL,
-  `status` ENUM('PENDING','PAID','FULFILLING','SHIPPED','COMPLETED','CANCELED') NOT NULL DEFAULT 'PENDING',
-  `paypal_order_id` VARCHAR(64) DEFAULT NULL,
-  `paypal_capture_id` VARCHAR(64) DEFAULT NULL,
-  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP(),
-  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP() ON UPDATE CURRENT_TIMESTAMP(),
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `order_no` (`order_no`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ------------------------------------------------------
--- Table: order_items (no timestamps)
--- ------------------------------------------------------
-CREATE TABLE `order_items` (
-  `id` INT NOT NULL AUTO_INCREMENT,
-  `order_id` INT NOT NULL,
-  `commodity_id` INT NOT NULL,
-  `title_snapshot` VARCHAR(255) NOT NULL,
-  `unit_price` DECIMAL(10,2) NOT NULL,
-  `quantity` INT NOT NULL,
-  `line_total` DECIMAL(10,2) NOT NULL,
-  PRIMARY KEY (`id`),
-  KEY `order_id` (`order_id`),
-  KEY `commodity_id` (`commodity_id`),
-  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
-  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`commodity_id`) REFERENCES `commodities` (`id`) ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- ------------------------------------------------------
--- Seed data migrated from hxbox.sql (with shipping_fee=NULL)
--- ------------------------------------------------------
-
--- categories
 LOCK TABLES `categories` WRITE;
-INSERT INTO `categories` (`id`,`name`) VALUES
-(6,'外饰改装'),
+/*!40000 ALTER TABLE `categories` DISABLE KEYS */;
+INSERT INTO `categories` VALUES
 (2,'LED灯带'),
-(3,'雾灯组件'),
-(7,'工具配件'),
 (1,'前保险杠'),
+(6,'外饰改装'),
+(7,'工具配件'),
 (4,'行李架'),
-(5,'贴纸拉花');
+(5,'贴纸拉花'),
+(3,'雾灯组件');
+/*!40000 ALTER TABLE `categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
--- commodities (insert includes shipping_fee=NULL after price)
+--
+-- Table structure for table `commodities`
+--
+
+DROP TABLE IF EXISTS `commodities`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `commodities` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(255) NOT NULL,
+  `description` text DEFAULT NULL,
+  `price` decimal(10,2) NOT NULL,
+  `shipping_fee` decimal(10,2) DEFAULT NULL,
+  `original_price` decimal(10,2) DEFAULT NULL,
+  `promotion_price` decimal(10,2) DEFAULT NULL,
+  `is_on_promotion` tinyint(1) DEFAULT 0,
+  `discount_amount` decimal(10,2) DEFAULT NULL,
+  `stock` int(11) NOT NULL DEFAULT 0,
+  `image_urls` text DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=30 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `commodities`
+--
+
 LOCK TABLES `commodities` WRITE;
-INSERT INTO `commodities` (`id`,`title`,`description`,`price`,`shipping_fee`,`original_price`,`promotion_price`,`is_on_promotion`,`discount_amount`,`stock`,`image_urls`,`created_at`,`updated_at`) VALUES
+/*!40000 ALTER TABLE `commodities` DISABLE KEYS */;
+INSERT INTO `commodities` VALUES
 (1,'卡车前保险杠','合金材质前保险杠，适配多款模型卡车，提升防护与外观',199.00,NULL,239.00,179.00,1,NULL,40,'image_bumper.jpg','2025-08-01 03:56:32','2025-10-18 02:00:00'),
 (2,'LED灯带套件','含控制器与延长线，支持多种灯效，适配1:10模型',49.00,NULL,NULL,NULL,0,NULL,150,'image_ledstrip.jpg','2025-08-01 03:56:32','2025-10-18 02:00:00'),
 (3,'雾灯组件','高亮雾灯组，含支架与线束，防水设计',59.00,NULL,69.00,55.00,1,NULL,120,'image_foglight.jpg','2025-08-01 03:56:32','2025-10-18 02:00:00'),
@@ -161,39 +110,173 @@ INSERT INTO `commodities` (`id`,`title`,`description`,`price`,`shipping_fee`,`or
 (27,'减震弹簧','改装弹簧（软/中/硬可选）',19.00,NULL,NULL,NULL,1,NULL,120,'image_spring.jpg','2025-08-27 07:56:48','2025-10-18 02:00:00'),
 (28,'车身贴纸套装','车身贴纸/拉花套装',18.00,NULL,NULL,NULL,0,NULL,999,'image_sticker2.jpg','2025-08-27 08:11:43','2025-10-18 02:00:00'),
 (29,'改装工具套件','模型改装工具基础套装',99.00,NULL,120.00,NULL,0,NULL,8,'image_toolkit.jpg','2025-08-27 08:21:42','2025-10-18 02:00:00');
+/*!40000 ALTER TABLE `commodities` ENABLE KEYS */;
 UNLOCK TABLES;
 
--- commodity_categories
+--
+-- Table structure for table `commodity_categories`
+--
+
+DROP TABLE IF EXISTS `commodity_categories`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `commodity_categories` (
+  `commodity_id` int(11) NOT NULL,
+  `category_id` int(11) NOT NULL,
+  PRIMARY KEY (`commodity_id`,`category_id`),
+  KEY `category_id` (`category_id`),
+  CONSTRAINT `commodity_categories_ibfk_1` FOREIGN KEY (`commodity_id`) REFERENCES `commodities` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `commodity_categories_ibfk_2` FOREIGN KEY (`category_id`) REFERENCES `categories` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `commodity_categories`
+--
+
 LOCK TABLES `commodity_categories` WRITE;
-INSERT INTO `commodity_categories` (`commodity_id`,`category_id`) VALUES
-(1,1),(1,6),(2,2),(3,3),(4,4),(6,6),(7,6),(12,6),(13,5),(14,6),(15,7),(16,6),(17,6),(18,2),(19,7),(20,7),(21,7),(22,7),(23,2),(27,6),(28,5),(29,7);
+/*!40000 ALTER TABLE `commodity_categories` DISABLE KEYS */;
+INSERT INTO `commodity_categories` VALUES
+(1,1),
+(2,2),
+(18,2),
+(23,2),
+(3,3),
+(4,4),
+(13,5),
+(28,5),
+(1,6),
+(6,6),
+(7,6),
+(12,6),
+(14,6),
+(16,6),
+(17,6),
+(27,6),
+(15,7),
+(19,7),
+(20,7),
+(21,7),
+(22,7),
+(29,7);
+/*!40000 ALTER TABLE `commodity_categories` ENABLE KEYS */;
 UNLOCK TABLES;
 
--- users (admin account from hxbox.sql)
-LOCK TABLES `users` WRITE;
-INSERT INTO `users` (`id`,`username`,`password`,`role`,`created_at`,`updated_at`) VALUES
-(1,'admina','$2b$10$g335De3ZQGbZ2iG3k7h45uT1WXw0oQFk9SCaJtL7lzWIct6N/7iPu',1,'2025-08-08 13:19:47','2025-08-08 13:19:47');
-UNLOCK TABLES;
+--
+-- Table structure for table `order_items`
+--
 
--- orders
-LOCK TABLES `orders` WRITE;
-INSERT INTO `orders` (`id`,`order_no`,`email`,`country`,`region`,`address1`,`address2`,`postal_code`,`phone`,`currency`,`total_amount`,`status`,`paypal_order_id`,`paypal_capture_id`,`created_at`,`updated_at`) VALUES
-(1,'20251017-000001','buyer1@example.com','CN','Guangdong','天河区体育东路100号',NULL,'510000','13800000000','USD',199.00,'PAID','TESTPAYPALORDERID1','TESTPAYPALCAPTUREID1','2025-10-17 09:00:00','2025-10-17 09:05:00'),
-(2,'20251017-000002','buyer2@example.com','US','CA','1 Infinite Loop',NULL,'95014',NULL,'USD',49.00,'PENDING',NULL,NULL,'2025-10-17 09:10:00','2025-10-17 09:10:00');
-UNLOCK TABLES;
+DROP TABLE IF EXISTS `order_items`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `order_items` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_id` int(11) NOT NULL,
+  `commodity_id` int(11) NOT NULL,
+  `title_snapshot` varchar(255) NOT NULL,
+  `unit_price` decimal(10,2) NOT NULL,
+  `quantity` int(11) NOT NULL,
+  `line_total` decimal(10,2) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `order_id` (`order_id`),
+  KEY `commodity_id` (`commodity_id`),
+  CONSTRAINT `order_items_ibfk_1` FOREIGN KEY (`order_id`) REFERENCES `orders` (`id`) ON DELETE CASCADE,
+  CONSTRAINT `order_items_ibfk_2` FOREIGN KEY (`commodity_id`) REFERENCES `commodities` (`id`) ON DELETE CASCADE ON UPDATE CASCADE
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
 
--- order_items
+--
+-- Dumping data for table `order_items`
+--
+
 LOCK TABLES `order_items` WRITE;
-INSERT INTO `order_items` (`id`,`order_id`,`commodity_id`,`title_snapshot`,`unit_price`,`quantity`,`line_total`) VALUES
+/*!40000 ALTER TABLE `order_items` DISABLE KEYS */;
+INSERT INTO `order_items` VALUES
 (1,1,1,'卡车前保险杠',199.00,1,199.00),
 (2,2,2,'LED灯带套件',49.00,1,49.00);
+/*!40000 ALTER TABLE `order_items` ENABLE KEYS */;
 UNLOCK TABLES;
 
+--
+-- Table structure for table `orders`
+--
+
+DROP TABLE IF EXISTS `orders`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `orders` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `order_no` varchar(32) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `country` varchar(64) NOT NULL,
+  `region` varchar(128) NOT NULL,
+  `address1` varchar(255) NOT NULL,
+  `address2` varchar(255) DEFAULT NULL,
+  `postal_code` varchar(32) DEFAULT NULL,
+  `phone` varchar(64) DEFAULT NULL,
+  `currency` varchar(8) NOT NULL DEFAULT 'USD',
+  `total_amount` decimal(10,2) NOT NULL,
+  `status` enum('PENDING','PAID','FULFILLING','SHIPPED','COMPLETED','CANCELED') NOT NULL DEFAULT 'PENDING',
+  `paypal_order_id` varchar(64) DEFAULT NULL,
+  `paypal_capture_id` varchar(64) DEFAULT NULL,
+  `created_at` timestamp NULL DEFAULT current_timestamp(),
+  `updated_at` timestamp NULL DEFAULT current_timestamp() ON UPDATE current_timestamp(),
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `order_no` (`order_no`),
+  UNIQUE KEY `order_no_2` (`order_no`)
+) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `orders`
+--
+
+LOCK TABLES `orders` WRITE;
+/*!40000 ALTER TABLE `orders` DISABLE KEYS */;
+INSERT INTO `orders` VALUES
+(1,'20251017-000001','buyer1@example.com','CN','Guangdong','天河区体育东路100号',NULL,'510000','13800000000','USD',199.00,'PAID','TESTPAYPALORDERID1','TESTPAYPALCAPTUREID1','2025-10-17 09:00:00','2025-10-17 09:05:00'),
+(2,'20251017-000002','buyer2@example.com','US','CA','1 Infinite Loop',NULL,'95014',NULL,'USD',49.00,'PENDING',NULL,NULL,'2025-10-17 09:10:00','2025-10-17 09:10:00');
+/*!40000 ALTER TABLE `orders` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `users`
+--
+
+DROP TABLE IF EXISTS `users`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!40101 SET character_set_client = utf8mb4 */;
+CREATE TABLE `users` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(255) NOT NULL,
+  `password` varchar(255) NOT NULL,
+  `role` tinyint(1) NOT NULL DEFAULT 0,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`),
+  UNIQUE KEY `username_2` (`username`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `users`
+--
+
+LOCK TABLES `users` WRITE;
+/*!40000 ALTER TABLE `users` DISABLE KEYS */;
+INSERT INTO `users` VALUES
+(1,'admina','$2b$10$g335De3ZQGbZ2iG3k7h45uT1WXw0oQFk9SCaJtL7lzWIct6N/7iPu',1,'2025-08-08 13:19:47','2025-08-08 13:19:47');
+/*!40000 ALTER TABLE `users` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
+
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
 /*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
+/*M!100616 SET NOTE_VERBOSITY=@OLD_NOTE_VERBOSITY */;
+
+-- Dump completed on 2025-12-03 14:22:01

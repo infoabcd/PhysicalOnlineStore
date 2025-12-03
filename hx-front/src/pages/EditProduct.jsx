@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { apiFetch, mediaImageUrl } from '../config/api';
+import { normalizeImageList } from '../lib/utils';
 
 const EditProduct = () => {
   const { id } = useParams();       // 获取 URL 中的商品ID
@@ -85,12 +86,10 @@ const EditProduct = () => {
         });
 
         // 设置图片信息
-        if (product.image_urls && product.image_urls.length > 0) {
-          const normalizedList = Array.isArray(product.image_urls) ? product.image_urls : [product.image_urls];
+        const normalizedList = normalizeImageList(product.image_urls);
+        if (normalizedList.length > 0) {
           setImageUrls(normalizedList);
-          setPreviewUrls(
-            normalizedList.map((name) => mediaImageUrl(name))
-          );
+          setPreviewUrls(normalizedList.map((name) => mediaImageUrl(name)));
         }
       } catch (error) {
           setMsg({ type: 'error', text: '加载商品数据失败，请检查控制台。' });
