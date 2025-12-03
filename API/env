@@ -1,0 +1,53 @@
+# --------------------------------------------------------------------
+# 1. PayPal API 配置 (敏感信息)
+#    - 这些值会直接被后端读取。
+#    - 请从您的 PayPal 开发者面板 (Sandbox 或 Live) 获取这些密钥。
+# --------------------------------------------------------------------
+
+# PayPal Client ID (公钥)
+PAYPAL_CLIENT_ID="替换为您的 PayPal Client ID"
+
+# PayPal Client Secret (私钥/密钥)
+PAYPAL_CLIENT_SECRET="替换为您的 PayPal Secret Key"
+
+# PayPal 环境：'sandbox' (测试环境) 或 'live' (生产环境)
+PAYPAL_ENV="sandbox"
+
+# 默认货币代码
+PAYPAL_CURRENCY="USD"
+
+# PayPal 支付成功后回跳的后端 URL (必须与 PayPal 注册的一致)
+PAYPAL_RETURN_URL="http://localhost:3000/orders/return"
+
+# PayPal 支付取消后回跳的后端 URL
+PAYPAL_CANCEL_URL="http://localhost:3000/orders/cancel"
+
+# 品牌名称，用于在 PayPal 支付页面显示
+PAYPAL_BRAND="Your Brand Name Here"
+
+
+# --------------------------------------------------------------------
+# 2. 前端配置 (非敏感信息，但有助于部署)
+# --------------------------------------------------------------------
+
+# 前端应用的基础 URL（例如：http://localhost:5173，一般在写网站域名）
+# 用于后端重定向用户（如支付完成后）
+FRONTEND_BASE_URL="http://localhost:5173"
+
+# --------------------------------------------------------------------
+# 3. 数据库配置 (Sequelize)
+# --------------------------------------------------------------------
+
+DB_DIALECT="mysql"
+DB_HOST="localhost"
+DB_PORT="3306"
+DB_USERNAME="root"
+DB_PASSWORD="123456"
+DB_NAME="physical_trading"
+
+# 是否自动同步数据库表结构 (默认 true)
+DB_AUTO_SYNC="true"
+# force: true 会删除并重建表，alter: true 会在不丢失数据的情况下调整表结构
+# 生产环境务必谨慎使用 force。
+DB_SYNC_FORCE="false"
+DB_SYNC_ALTER="false"
