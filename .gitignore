@@ -1,0 +1,9 @@
+.DS_Store
+node_modules/
+API/.env
+API/node_modules/
+API/package-lock.json
+hx-front/node_modules/
+test.md
+upload-test.html
+hx-front/dist
