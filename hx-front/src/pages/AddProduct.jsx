@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiFetch, mediaImageUrl } from '../config/api';
+import { normalizeImageList } from '../lib/utils';
 
 const AddProduct = () => {
   const navigate = useNavigate();
@@ -86,8 +87,8 @@ const AddProduct = () => {
 
       const data = await response.json();
       showToast('success', '图片上传成功！');
-      const fileNames = data.fileNames || [];
-      const filePaths = (data.filePaths || []).map((p) => mediaImageUrl(p));
+      const fileNames = normalizeImageList(data.fileNames);
+      const filePaths = normalizeImageList(data.filePaths).map((p) => mediaImageUrl(p));
       setImageUrls((prev) => [...prev, ...fileNames]);
       setPreviewUrls((prev) => [...prev, ...filePaths]);
     } catch (error) {

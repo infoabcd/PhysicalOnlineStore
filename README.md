@@ -1,6 +1,8 @@
-# Physical Online Store v1.2
+# Physical Online Store v1.3
 
 一个包含 **Express + Sequelize + MySQL** 后端与 **React + Vite + Ant Design + TailwindcCSS** 前端的购物平台，支持 PayPal 支付重定向、订单管理、商品分类与后台运营功能。
+
+本项目由【Warehouse-Query-System】(https://github.com/infoabcd/Warehouse-Query-System) 改进而来，并且有一个正式定制版本正在线上运行。目前该版本为定制版本的支线开源测试版本。
 
 **⚠️ 这是一条支线测试版本，如果有问题，请发 issue ⚠️**
 
@@ -65,6 +67,24 @@ Physical trading platform/
 - React Router 7
 - Tailwind CSS
 
+## 截图
+
+主页：
+![主页0](Screenshot/Screenshot%202025-12-03%20at%2015.31.54.png "主页0")
+![主页1](Screenshot/Screenshot%202025-12-03%20at%2015.32.08.png "主页1")
+
+商品：
+![商品0](Screenshot/Screenshot%202025-12-03%20at%2015.33.11.png "商品0")
+
+购物车&支付：
+![购物车&支付0](Screenshot/Screenshot%202025-12-03%20at%2015.32.16.png "购物车&支付0")
+![购物车&支付1](Screenshot/Screenshot%202025-12-03%20at%2015.32.24.png "购物车&支付1")
+![购物车&支付2](Screenshot/Screenshot%202025-12-03%20at%2015.32.29.png "购物车&支付2")
+
+后台：
+![后台0](Screenshot/Screenshot%202025-12-03%20at%2015.32.37.png "后台0")
+![后台1](Screenshot/Screenshot%202025-12-03%20at%2015.32.43.png "后台1")
+
 ## 数据库说明
 
 仓库根目录提供两个 SQL：
@@ -111,12 +131,12 @@ Physical trading platform/
 
 ### 1. 准备数据库
 
-1. 安装 MySQL 8，并确保创建数据库（例如 `test`）。
+1. 安装 MySQL 8，并确保创建数据库（例如 `physical_trading`）。
 2. 导入 SQL：
    ```bash
-   mysql -u root -p test < rc_generated.sql
+   mysql -u root -p physical_trading < rc_generated.sql
    # 或使用带数据版本
-   mysql -u root -p test < rc_with_data.sql
+   mysql -u root -p physical_trading < rc_with_data.sql
    ```
 3. **数据库连接信息**：修改 `API/.env`（由 `API/config/config.js` 自动读取）。
 
