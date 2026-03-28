@@ -1,109 +1,77 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { cn } from '../lib/utils';
 
-export default function ProductCard({ title, imageUrl, price, promoPrice, stock, shippingFee, onClick, onBuy }) {
-  // 商品卡片CSS样式
-  const containerStyle = {
-    width: '100%',
-    background: '#242424',
-    // rgba 最后一个是透明度参数，颜色编码不支持透明度，使用opacity会影响全局
-    border: '2px solid rgba(245, 138, 43, 0.3)',
-    borderRadius: 12,
-    boxShadow: '0 6px 16px rgba(0,0,0,0.35)',
-    cursor: 'pointer',
-    transition: 'transform 160ms ease, box-shadow 160ms ease',
-  };
-  const hoverStyle = {
-    transform: 'translateY(-2px)',
-    boxShadow: '0 10px 24px rgba(0,0,0,0.45)'
-  };
-  const imageBoxStyle = {
-    height: 200,
-    background: '#2a2a2a',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderTopLeftRadius: 10,
-    borderTopRightRadius: 10,
-    overflow: 'hidden'
-  };
-  const imgStyle = {
-    maxWidth: '100%',
-    maxHeight: '100%',
-    objectFit: 'contain',
-    filter: 'drop-shadow(0 4px 10px rgba(0,0,0,0.45))'
-  };
-  const bodyStyle = { padding: 12, color: '#CCCCCC' };
-  const titleStyle = {
-    color: '#F58A2B',
-    fontWeight: 800,
-    letterSpacing: 0.3,
-    lineHeight: 1.2,
-    marginBottom: 4,
-    fontSize: 20
-  };
-  const priceStyle = { marginTop: 6, color: '#CCCCCC', fontWeight: 600 };
-  const shipStyle = { marginTop: 4, color: '#cfcfcf', fontSize: 12 };
-  const promoWrapStyle = { display: 'flex', alignItems: 'center', gap: 8 };
-  const delStyle = { color: '#c43c1a', opacity: 0.9, textDecoration: 'line-through' };
-  const okStyle = { color: '#52c41a', fontWeight: 700 };
-  const footerStyle = {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    marginTop: 8
-  };
-  const btnStyle = {
-    border: '1px solid #F58A2B',
-    color: '#F58A2B',
-    background: 'transparent',
-    borderRadius: 999,
-    padding: '4px 10px',
-    fontSize: 12,
-    cursor: 'pointer'
-  };
-
-  const [hovered, setHovered] = React.useState(false);
+export default function ProductCard({
+  title,
+  imageUrl,
+  price,
+  promoPrice,
+  stock,
+  shippingFee,
+  onClick,
+  onBuy,
+}) {
+  const [hovered, setHovered] = useState(false);
 
   return (
-    <div
-      style={{ ...containerStyle, ...(hovered ? hoverStyle : {}) }}
+    <article
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      className={cn(
+        'group flex cursor-pointer flex-col overflow-hidden rounded-2xl border border-brand/25 bg-surface-raised shadow-card transition duration-200',
+        hovered && 'translate-y-[-3px] border-brand/45 shadow-card-hover',
+      )}
       onClick={onClick}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >
-      <div style={imageBoxStyle}>
+      <div className="flex h-[200px] items-center justify-center bg-[#2a2a2a]">
         <img
           alt={title}
           src={imageUrl}
-          style={imgStyle}
-          onError={(e)=>{ e.currentTarget.src = '/placeholder.png'; }}
+          className="max-h-full max-w-full object-contain drop-shadow-md transition duration-200 group-hover:scale-[1.02]"
+          onError={(e) => {
+            e.currentTarget.src = '/placeholder.png';
+          }}
         />
       </div>
-      <div style={bodyStyle}>
-        <div style={titleStyle}>{title}</div>
-        {promoPrice ? (
-          <div style={promoWrapStyle}>
-            <span style={delStyle}>${price}</span>
-            <span style={okStyle}>${promoPrice}</span>
-          </div>
-        ) : (
-          <div style={priceStyle}>${price}</div>
-        )}
-        {shippingFee !== null && shippingFee !== undefined && (
-          <div style={shipStyle}>邮费: ${shippingFee}</div>
+      <div className="flex flex-1 flex-col p-4">
+        <h2 className="line-clamp-2 min-h-[2.75rem] text-base font-semibold leading-snug text-brand">{title}</h2>
+        <div className="mt-2">
+          {promoPrice != null && promoPrice !== '' ? (
+            <div className="flex flex-wrap items-baseline gap-2">
+              <span className="text-sm text-red-400/90 line-through">${price}</span>
+              <span className="text-lg font-bold text-emerald-400">${promoPrice}</span>
+            </div>
+          ) : (
+            <p className="text-lg font-semibold text-neutral-200">${price}</p>
+          )}
+        </div>
+        {shippingFee != null && shippingFee !== undefined && (
+          <p className="mt-1 text-xs text-neutral-500">邮费 ${shippingFee}</p>
         )}
         {typeof stock !== 'undefined' && (
-          <div style={{ marginTop: 4, color: '#cfcfcf', fontSize: 12 }}>库存: {stock}</div>
+          <p className="mt-0.5 text-xs text-neutral-500">库存 {stock}</p>
         )}
-        <div style={footerStyle}>
+        <div className="mt-auto flex justify-end pt-3">
           <button
             type="button"
-            style={btnStyle}
-            onClick={(e)=>{ e.stopPropagation?.(); onBuy?.(); }}
+            className="rounded-full border border-brand/60 bg-brand/10 px-3 py-1.5 text-xs font-medium text-brand transition hover:bg-brand/20"
+            onClick={(e) => {
+              e.stopPropagation();
+              onBuy?.();
+            }}
           >
-            查看详细
+            查看详情
           </button>
         </div>
       </div>
-    </div>
+    </article>
   );
 }

@@ -14,7 +14,7 @@ const buildConfig = (overrides = {}) => {
   const config = {
     username: process.env.DB_USERNAME || process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '123456',
-    database: process.env.DB_NAME || 'test',
+    database: process.env.DB_NAME || 'physical_trading',
     host: process.env.DB_HOST || 'localhost',
     dialect: process.env.DB_DIALECT || 'mysql',
     logging: resolveLogging(),
@@ -40,7 +40,7 @@ const buildConfig = (overrides = {}) => {
 module.exports = {
   development: buildConfig(),
   test: buildConfig({
-    database: process.env.DB_TEST_NAME || process.env.DB_NAME || 'test',
-  }),
+    database: process.env.DB_TEST_NAME || process.env.DB_NAME || 'physical_trading',
+  }), 
   production: buildConfig(),
 };

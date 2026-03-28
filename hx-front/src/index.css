@@ -1,0 +1,36 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --bg-base: #181818;
+    --bg-elevated: #1f1f1f;
+    --border-subtle: rgba(255, 255, 255, 0.08);
+    --text-primary: #e8e8e8;
+    --text-muted: #9ca3af;
+    --brand: #e8892a;
+    --brand-hover: #f59e3b;
+  }
+
+  html {
+    @apply antialiased;
+  }
+
+  body {
+    @apply m-0 min-h-screen bg-[#181818] text-neutral-200;
+    font-family: 'DM Sans', system-ui, sans-serif;
+  }
+
+  ::selection {
+    @apply bg-brand/30 text-white;
+  }
+}
+
+@layer utilities {
+  .focus-ring {
+    @apply outline-none ring-2 ring-brand/40 ring-offset-2 ring-offset-[#181818];
+  }
+}

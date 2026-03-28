@@ -62,11 +62,12 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="min-h-screen" style={{ background: '#2C2C2C' }}>
-      <div className="min-h-screen flex items-center justify-center px-4 text-neutral-200">
-        <div className="w-full max-w-sm rounded-xl border border-neutral-700 bg-[#2C2C2C] p-6 shadow-lg">
-          <div className="mb-4 text-center">
-            <h1 className="text-2xl font-bold text-[#F58A2B]">登录</h1>
+    <div className="min-h-screen bg-[#181818]">
+      <div className="flex min-h-screen items-center justify-center px-4 text-neutral-200">
+        <div className="w-full max-w-sm rounded-2xl border border-white/10 bg-surface-raised p-8 shadow-card">
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold text-brand">管理后台登录</h1>
+            <p className="mt-1 text-xs text-neutral-500">仅限管理员访问</p>
           </div>
 
           {msg && (
@@ -84,7 +85,7 @@ const LoginPage = () => {
                 value={form.username}
                 onChange={(e)=>setForm(f=>({ ...f, username: e.target.value }))}
                 required
-                className="w-full h-10 rounded-md border border-neutral-700 bg-[#1e1e1e] px-3 text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-[#F58A2B] focus:ring-2 focus:ring-[#F58A2B]/20"
+                className="h-11 w-full rounded-xl border border-white/10 bg-[#141414] px-4 text-neutral-200 placeholder:text-neutral-600 focus:border-brand/50 focus:outline-none focus:ring-2 focus:ring-brand/20"
               />
             </div>
 
@@ -97,7 +98,7 @@ const LoginPage = () => {
                 value={form.password}
                 onChange={(e)=>setForm(f=>({ ...f, password: e.target.value }))}
                 required
-                className="w-full h-10 rounded-md border border-neutral-700 bg-[#1e1e1e] px-3 text-neutral-200 placeholder-neutral-500 focus:outline-none focus:border-[#F58A2B] focus:ring-2 focus:ring-[#F58A2B]/20"
+                className="h-11 w-full rounded-xl border border-white/10 bg-[#141414] px-4 text-neutral-200 placeholder:text-neutral-600 focus:border-brand/50 focus:outline-none focus:ring-2 focus:ring-brand/20"
               />
             </div>
 
@@ -119,7 +120,7 @@ const LoginPage = () => {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full h-10 rounded-md border border-[#F58A2B] text-[#F58A2B] hover:border-[#ff983f] hover:text-[#ff983f] disabled:opacity-70"
+                className="h-11 w-full rounded-xl border border-brand bg-brand/15 text-sm font-semibold text-brand transition hover:bg-brand/25 disabled:opacity-70"
               >
                 {loading ? '登录中...' : '登录'}
               </button>

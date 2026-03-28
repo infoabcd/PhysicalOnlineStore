@@ -127,7 +127,7 @@ router.delete('/delete/:id', verifyAdmin, async(req, res) => {
         const commodity = await Commodity.findByPk(commodityId);
         
         if (!commodity) {
-            res.status(404).json({ message: '你想要删除的商品不存在.' });
+            return res.status(404).json({ message: '你想要删除的商品不存在.' });
         }
 
         await commodity.destroy();

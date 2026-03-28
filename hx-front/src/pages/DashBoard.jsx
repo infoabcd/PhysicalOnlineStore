@@ -1,13 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-// Removed AntD message/Modal in favor of native implementations
-import { DeleteOutlined, PlusOutlined } from '@ant-design/icons';
 import { apiFetch, mediaImageUrl } from '../config/api';
-
-const boxStyle = {
-  width: '100%',
-  margin: '0.76em 0',
-};
 
 function Dashboard() {
   const [data, setData] = useState([]);
@@ -240,75 +233,15 @@ function Dashboard() {
     setProductToDelete(null);
   };
 
-  const columns = [
-    {
-      title: '商品标题',
-      dataIndex: 'title',
-      key: 'title',
-    },
-    {
-      title: '描述',
-      dataIndex: 'description',
-      key: 'description',
-    },
-    {
-      title: '价格 (¥)',
-      dataIndex: 'price',
-      key: 'price',
-      render: (text) => `¥ ${text}`,
-    },
-    {
-      title: '库存',
-      dataIndex: 'stock',
-      key: 'stock',
-    },
-    {
-      title: '是否促销',
-      dataIndex: 'is_on_promotion',
-      key: 'is_on_promotion',
-      render: (is_on_promotion) => (
-        <Tag color={is_on_promotion ? 'volcano' : 'green'}>
-          {is_on_promotion ? '是' : '否'}
-        </Tag>
-      ),
-    },
-    {
-      title: '分类',
-      dataIndex: 'categories',
-      key: 'categories',
-      render: (categories) => (
-        <Space>
-          {categories.map((category) => (
-            <Tag color="blue" key={category.id}>
-              {category.name}
-            </Tag>
-          ))}
-        </Space>
-      ),
-    },
-    {
-      title: '创建日期',
-      dataIndex: 'created_at',
-      key: 'created_at',
-      render: (text) => {
-        const date = new Date(text);
-        return date.toLocaleString();
-      },
-    },
-    {
-      title: '操作',
-      key: 'action',
-      render: (_, record) => (
-        <Space size="middle">
-          <Button type="link" onClick={() => navigate(`/dashboard/edit-product/${record.id}`)}>编辑</Button>
-          <Button type="link" danger icon={<DeleteOutlined />} onClick={() => handleDelete(record.id)}>删除</Button>
-        </Space>
-      ),
-    },
-  ];
-
   if (error) {
-    return <h1>错误: {error}</h1>;
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#181818] px-4">
+        <div className="max-w-md rounded-2xl border border-red-500/30 bg-red-950/30 p-6 text-center text-red-200">
+          <p className="text-sm font-medium text-red-300">无法加载仪表盘</p>
+          <p className="mt-2 text-sm text-red-200/80">{error}</p>
+        </div>
+      </div>
+    );
   }
 
   return (

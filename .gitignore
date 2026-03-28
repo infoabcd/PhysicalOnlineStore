@@ -6,6 +6,7 @@ API/.env
 API/node_modules/
 API/package-lock.json
 hx-front/node_modules/
+hx-front/package-lock.json
 test.md
 upload-test.html
 hx-front/dist
